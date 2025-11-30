@@ -13,128 +13,13 @@
         rel="stylesheet">
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Custom Css -->
+    <link rel="stylesheet" href="styles.css">
     <style>
         body {
-            font-family: 'Poppins', sans-serif;
+            font-family: "Poppins", sans-serif;
             background: linear-gradient(135deg, #0f766e 0%, #14b8a6 50%, #2dd4bf 100%);
             min-height: 100vh;
-        }
-
-        .text-teal {
-            color: #0f766e;
-        }
-
-        .form-wrapper {
-            background: #ffffff;
-            border-radius: 16px;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
-        }
-
-        .form-control {
-            border-radius: 8px;
-            padding: 12px 16px;
-            transition: all 0.3s ease;
-        }
-
-        .form-control:focus {
-            border-color: #14b8a6;
-            box-shadow: 0 0 0 0.25rem rgba(20, 184, 166, 0.15);
-        }
-
-        .btn {
-            border-radius: 8px;
-            padding: 12px;
-            font-weight: 600;
-            transition: all 0.3s ease;
-        }
-
-        .btn-primary {
-            background: linear-gradient(135deg, #0f766e 0%, #14b8a6 100%);
-            border: none;
-        }
-
-        .btn-primary:hover {
-            background: linear-gradient(135deg, #0d6660 0%, #0f9b8e 100%);
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(15, 118, 110, 0.4);
-        }
-
-        .btn-danger {
-            background: #ffffff;
-            color: #dc3545;
-            border: 2px solid #dc3545;
-        }
-
-        .btn-danger:hover {
-            background: #dc3545;
-            color: #ffffff;
-            transform: translateY(-2px);
-        }
-
-        .text-link {
-            color: #0f766e;
-            font-weight: 600;
-            transition: color 0.3s ease;
-        }
-
-        .text-link:hover {
-            color: #14b8a6;
-        }
-
-        .particle {
-            position: fixed;
-            border-radius: 50%;
-            pointer-events: none;
-            opacity: 0.2;
-            animation: float 15s infinite;
-            z-index: 0;
-        }
-
-        @keyframes float {
-
-            0%,
-            100% {
-                transform: translateY(0) translateX(0);
-            }
-
-            33% {
-                transform: translateY(-30px) translateX(30px);
-            }
-
-            66% {
-                transform: translateY(30px) translateX(-30px);
-            }
-        }
-
-        .particle:nth-child(1) {
-            width: 80px;
-            height: 80px;
-            background: rgba(255, 255, 255, 0.3);
-            top: 10%;
-            left: 10%;
-        }
-
-        .particle:nth-child(2) {
-            width: 60px;
-            height: 60px;
-            background: rgba(255, 255, 255, 0.2);
-            top: 70%;
-            left: 80%;
-            animation-delay: 5s;
-        }
-
-        .particle:nth-child(3) {
-            width: 100px;
-            height: 100px;
-            background: rgba(255, 255, 255, 0.15);
-            top: 40%;
-            left: 5%;
-            animation-delay: 10s;
-        }
-
-        .container {
-            position: relative;
-            z-index: 1;
         }
     </style>
 </head>

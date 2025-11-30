@@ -181,6 +181,25 @@
       <div class="col-12 col-xl-10">
 
         <form id="surveyForm">
+          <!-- Admin Email -->
+          <div class="question-section">
+            <div class="section-title">
+              <i class="fas fa-envelope fa-circle text-white bg-primary rounded-circle p-2"
+                style="font-size: 0.9rem; width: 35px; height: 35px; display: flex; align-items: center; justify-content: center;"></i>
+              <span> Admin Email</span>
+            </div>
+
+            <div class="mb-3">
+              <label for="adminEmail" class="form-label">
+                <i class="fas fa-at me-2"></i>Your Email (required)
+              </label>
+              <input type="email" class="form-control" id="adminEmail" placeholder="e.g., admin@gmail.com" required>
+              <div class="helper-text">
+                <i class="fas fa-info-circle me-1"></i>This email will be stored with the survey info.
+              </div>
+            </div>
+          </div>
+
 
           <!-- Question 1: Text Input -->
           <div class="question-section">
@@ -328,8 +347,11 @@
     crossorigin="anonymous"></script>
   <!-- SupaBase Library -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <!-- SWEET ALERT -->
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <!-- Custom Js -->
   <script src="app.js"></script>
+  <!-- <script src="testing.js"></script> -->
 </body>
 
 </html>
