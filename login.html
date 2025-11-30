@@ -2,9 +2,9 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Sign Up Form</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Form</title>
     <!-- Bootstrap CDN -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-LN+7fdVzj6u52u30Kp6M/trliBMCMKTyK833zpbD+pXdCLuTusPj697FH4R/5mcr" crossorigin="anonymous">
@@ -57,18 +57,6 @@
             background: linear-gradient(135deg, #0d6660 0%, #0f9b8e 100%);
             transform: translateY(-2px);
             box-shadow: 0 6px 20px rgba(15, 118, 110, 0.4);
-        }
-
-        .btn-danger {
-            background: #ffffff;
-            color: #dc3545;
-            border: 2px solid #dc3545;
-        }
-
-        .btn-danger:hover {
-            background: #dc3545;
-            color: #ffffff;
-            transform: translateY(-2px);
         }
 
         .text-link {
@@ -149,27 +137,16 @@
         <div class="row justify-content-center">
             <div class="col-12 col-sm-10 col-md-8 col-lg-6 col-xl-5">
                 <div class="form-wrapper p-4 p-md-5">
-                    <h1 class="text-center fw-bold mb-2">Create Account</h1>
-                    <p class="text-center text-muted mb-4">Join us today and get started!</p>
+                    <h1 class="text-center fw-bold mb-2">Welcome Back</h1>
+                    <p class="text-center text-muted mb-4">Login to continue to your account</p>
 
                     <form>
-                        <div class="mb-3">
-                            <label for="nameInput" class="form-label fw-semibold">
-                                <i class="fas fa-user me-2 text-teal"></i>Full Name
-                            </label>
-                            <input type="text" class="form-control form-control-lg" id="nameInput"
-                                placeholder="Enter your name">
-                        </div>
-
                         <div class="mb-3">
                             <label for="emailInput" class="form-label fw-semibold">
                                 <i class="fas fa-envelope me-2 text-teal"></i>Email Address
                             </label>
                             <input type="email" class="form-control form-control-lg" id="emailInput"
                                 aria-describedby="emailHelp" placeholder="Enter your email">
-                            <div id="emailHelp" class="form-text">
-                                <i class="fas fa-shield-alt me-1"></i>We'll never share your email with anyone else.
-                            </div>
                         </div>
 
                         <div class="mb-4">
@@ -177,31 +154,18 @@
                                 <i class="fas fa-lock me-2 text-teal"></i>Password
                             </label>
                             <input type="password" class="form-control form-control-lg" id="passwordInput"
-                                placeholder="Create a strong password">
+                                placeholder="Enter your password">
                         </div>
 
                         <div class="d-grid gap-2 mb-3">
                             <button type="submit" class="btn btn-primary btn-lg">
-                                <i class="fas fa-user-plus me-2"></i>Sign Up
+                                <i class="fas fa-sign-in-alt me-2"></i>Login
                             </button>
                         </div>
 
-                        <div class="d-flex align-items-center my-3">
-                            <hr class="flex-grow-1">
-                            <span class="px-3 text-muted small fw-semibold">OR</span>
-                            <hr class="flex-grow-1">
-                        </div>
-
-                        <!-- <div class="d-grid gap-2">
-              <button type="button" id="googleSignUp" class="btn btn-danger btn-lg d-flex align-items-center justify-content-center gap-2">
-                <i class="fab fa-google"></i>
-                <span>Continue with Google</span>
-              </button>
-            </div> -->
-
                         <p class="text-center mt-4 mb-0">
-                            Already have an account?
-                            <a href="login.html" class="text-link text-decoration-none">Log in</a>
+                            Don't have an account?
+                            <a href="index.html" class="text-link text-decoration-none">Sign up</a>
                         </p>
                     </form>
                 </div>
@@ -211,7 +175,7 @@
 
     <!-- Bootstrap CDN -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-ndDqU0Gzau9qJ1lfW4pNLlhNTkCfHzAVBReH9diLvGRem5+R9g2FzA8ZGN954O5Q"
+        integrity="sha384-ndDqU0Gzau9qJ1lfW4pNLlhNTkCfHzAVBReH9diLlhNTkCfHzAVBReH9diLvGRem5+R9g2FzA8ZGN954O5Q"
         crossorigin="anonymous"></script>
     <!-- SupaBase Library -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
