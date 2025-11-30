@@ -281,14 +281,19 @@
           <i class="fas fa-info-circle"></i>
           <div>
             <h6 class="fw-bold mb-2">Important Information</h6>
-            <p class="mb-0 small">All information provided is confidential and will be used solely for COVID-19 tracking purposes. Fields marked with <span class="required-badge">Required</span> must be completed.</p>
+            <p class="mb-0 small">All information provided is confidential and will be used solely for COVID-19 tracking
+              purposes. Fields marked with <span class="required-badge">Required</span> must be completed.</p>
           </div>
         </div>
 
         <!-- Progress Bar -->
+        <div class="mb-3 text-end">
+          <strong class="text-muted">Time Remaining: <span id="timeRemaining">10:00</span></strong>
+        </div>
         <div class="progress-bar-custom">
           <div class="progress-fill" id="progressBar" style="width: 0%"></div>
         </div>
+
 
         <!-- Loading Spinner -->
         <div class="loading-spinner" id="loadingSpinner">
@@ -331,7 +336,7 @@
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <!-- JS File -->
   <script src="app.js"></script>
-   <!-- <script src="testing.js"></script> -->
+  <!-- <script src="testing.js"></script> -->
 </body>
 
 </html>

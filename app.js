@@ -197,3 +197,337 @@ function handleLoginPage() {
 
 
 
+
+// =============================================
+// ADMIN: ADD OPTIONS FOR DROPDOWN/CHECKBOX
+// =============================================
+function addDropdownOption() {
+    const container = document.getElementById("dropdownOptions");
+    if (!container) return;
+
+    const div = document.createElement("div");
+    div.className = "option-item d-flex mb-2";
+    div.innerHTML = `
+        <input type="text" class="form-control" placeholder="Option text">
+        <button class="btn btn-danger btn-sm ms-2" type="button" onclick="this.parentElement.remove()">
+            <i class="fas fa-trash"></i>
+        </button>
+    `;
+    container.appendChild(div);
+}
+
+function addCheckboxOption() {
+    const container = document.getElementById("checkboxOptions");
+    if (!container) return;
+
+    const div = document.createElement("div");
+    div.className = "option-item d-flex mb-2";
+    div.innerHTML = `
+        <input type="text" class="form-control" placeholder="Option text">
+        <button class="btn btn-danger btn-sm ms-2" type="button" onclick="this.parentElement.remove()">
+            <i class="fas fa-trash"></i>
+        </button>
+    `;
+    container.appendChild(div);
+}
+
+
+
+
+
+
+
+
+
+
+
+
+/// =====================================================
+// ADMIN: CREATE SURVEY — NO VALIDATION — WITH REDIRECT
+// =====================================================
+function handleAdminSurveyCreation() {
+    const surveyForm = document.getElementById("surveyForm");
+    if (!surveyForm) return;
+
+    surveyForm.addEventListener("submit", async (e) => {
+        e.preventDefault();
+
+        // Collect Values
+        const email = document.getElementById("adminEmail").value.trim();
+
+        const ques1 = document.getElementById("question1").value.trim();
+        const ques2 = document.getElementById("question2").value.trim();
+        const ques3 = document.getElementById("question3").value.trim();
+        const ques4 = document.getElementById("question4").value.trim();
+
+        const req1 = document.getElementById("required1").checked;
+        const req2 = document.getElementById("required2").checked;
+        const req3 = document.getElementById("required3").checked;
+        const req4 = document.getElementById("required4").checked;
+
+        const dropdownOptions = [...document.querySelectorAll(".dropdown-option")]
+            .map(i => i.value.trim())
+            .filter(v => v !== "");
+
+        const checkboxOptions = [...document.querySelectorAll(".checkbox-option")]
+            .map(i => i.value.trim())
+            .filter(v => v !== "");
+
+        // Insert survey into Supabase
+        const { data, error } = await supabaseClient
+            .from("surveys")
+            .insert([{
+                email,
+                ques1,
+                ques2,
+                ques3,
+                ques4,
+                ques2_options: dropdownOptions,
+                ques3_options: checkboxOptions,
+                req1,
+                req2,
+                req3,
+                req4
+            }])
+            .select();   // important (returns inserted row)
+
+        if (error) {
+            console.error(error);
+            return Swal.fire("Error", "Failed to create survey!", "error");
+        }
+
+        // Success
+        Swal.fire({
+            icon: "success",
+            title: "Survey Created!",
+            timer: 1500,
+            showConfirmButton: false
+        });
+
+        // Redirect to user survey page
+        setTimeout(() => {
+            window.location.href = `survey.html?id=${data[0].id}`;
+        }, 1500);
+    });
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// =========================================================
+// USER PAGE: LOAD SURVEY + RENDER QUESTIONS + VALIDATION
+// =========================================================
+
+// Detect if we are on survey.html
+if (window.location.pathname.includes("survey.html")) {
+    loadSurveyForUser();
+}
+
+async function loadSurveyForUser() {
+    const spinner = document.getElementById("loadingSpinner");
+    const container = document.getElementById("questionsContainer");
+    const form = document.getElementById("surveyResponseForm");
+
+    spinner.style.display = "block";
+
+    // Get survey ID from URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const surveyId = urlParams.get("id");
+
+    if (!surveyId) {
+        spinner.style.display = "none";
+        document.getElementById("noQuestionsMessage").style.display = "block";
+        return;
+    }
+
+    // Fetch survey from Supabase
+    const { data, error } = await supabaseClient
+        .from("surveys")
+        .select("*")
+        .eq("id", surveyId)
+        .single();
+
+    spinner.style.display = "none";
+
+    if (error || !data) {
+        document.getElementById("noQuestionsMessage").style.display = "block";
+        return;
+    }
+
+    // Render questions
+    renderSurveyQuestions(data);
+
+    form.style.display = "block";
+
+    startTimer(); // Start 10-minute timer
+    handleUserFormSubmit(surveyId, data); // Validation + Submit
+}
+
+// ===============================
+// RENDER SURVEY QUESTIONS
+// ===============================
+
+function renderSurveyQuestions(survey) {
+    const container = document.getElementById("questionsContainer");
+    container.innerHTML = "";
+
+    let questions = [
+        { text: survey.ques1, required: survey.req1, type: "text" },
+        { text: survey.ques2, required: survey.req2, type: "dropdown", options: survey.ques2_options },
+        { text: survey.ques3, required: survey.req3, type: "checkbox", options: survey.ques3_options },
+        { text: survey.ques4, required: survey.req4, type: "text" }
+    ];
+
+    questions.forEach((q, index) => {
+        if (!q.text) return; // Skip empty questions
+
+        let html = `
+        <div class="question-card">
+            <div class="d-flex align-items-center mb-3">
+                <div class="question-number">${index + 1}</div>
+                <div class="ms-3 question-text">${q.text}
+                    ${q.required ? `<span class="required-badge">Required</span>` : ""}
+                </div>
+            </div>
+        `;
+
+        // Question Types
+        if (q.type === "text") {
+            html += `
+            <input type="text" class="form-control user-answer" 
+                data-index="${index}" data-required="${q.required}">
+            `;
+        }
+
+        if (q.type === "dropdown") {
+            html += `<select class="form-select user-answer" data-index="${index}" data-required="${q.required}">
+                        <option value="">Select an option</option>`;
+            q.options.forEach(opt => {
+                html += `<option value="${opt}">${opt}</option>`;
+            });
+            html += `</select>`;
+        }
+
+        if (q.type === "checkbox" && Array.isArray(q.options) && q.options.length > 0) {
+            q.options.forEach(opt => {
+                html += `
+        <div class="form-check">
+            <input type="checkbox" class="form-check-input user-answer-checkbox" 
+                data-index="${index}" value="${opt}">
+            <label class="form-check-label">${opt}</label>
+        </div>`;
+            });
+        } else if (q.type === "checkbox") {
+            html += `<p class="text-muted small">No options available for this question.</p>`;
+        }
+
+
+        html += `</div>`;
+        container.innerHTML += html;
+    });
+}
+
+// ===============================
+// 10 MINUTE TIMER
+// ===============================
+function startTimer() {
+    let timeLeft = 600; // 10 min = 600 sec
+    const progress = document.getElementById("progressBar");
+    const timeDisplay = document.getElementById("timeRemaining");
+
+    const timer = setInterval(() => {
+        timeLeft--;
+
+        // Update progress bar
+        let percent = ((600 - timeLeft) / 600) * 100;
+        progress.style.width = percent + "%";
+
+        // Update time text
+        let minutes = Math.floor(timeLeft / 60);
+        let seconds = timeLeft % 60;
+        timeDisplay.textContent = `${minutes}:${seconds < 10 ? "0" + seconds : seconds}`;
+
+        if (timeLeft <= 0) {
+            clearInterval(timer);
+            Swal.fire("Time's up!", "Your survey was automatically submitted.", "warning");
+            document.getElementById("surveyResponseForm").submit();
+        }
+    }, 1000);
+}
+
+
+// ===============================
+// USER SURVEY SUBMIT + VALIDATION
+// ===============================
+function handleUserFormSubmit(surveyId, survey) {
+
+    document.getElementById("surveyResponseForm").addEventListener("submit", async (e) => {
+        e.preventDefault();
+
+        const textInputs = document.querySelectorAll(".user-answer");
+        const checkboxInputs = document.querySelectorAll(".user-answer-checkbox");
+
+        let answers = {
+            q1: "",
+            q2: "",
+            q3: [],
+            q4: ""
+        };
+
+        let validationError = false;
+
+        // Process text + dropdown
+        textInputs.forEach(input => {
+            const index = input.dataset.index;
+            const required = input.dataset.required === "true";
+            const value = input.value.trim();
+
+            if (required && value === "") validationError = true;
+
+            if (index == 0) answers.q1 = value;
+            if (index == 1) answers.q2 = value;
+            if (index == 3) answers.q4 = value;
+        });
+
+        // Process checkboxes
+        checkboxInputs.forEach(input => {
+            if (input.checked) answers.q3.push(input.value);
+        });
+
+        if (survey.req3 && answers.q3.length === 0) validationError = true;
+
+        if (validationError) {
+            return Swal.fire("Error", "Please fill all required fields!", "error");
+        }
+
+        // Save response
+        const { error } = await supabaseClient
+            .from("responses")
+            .insert([{ survey_id: surveyId, answers }]);
+
+        if (error) {
+            console.error(error);
+            return Swal.fire("Error", "Failed to submit survey!", "error");
+        }
+
+        Swal.fire({
+            icon: "success",
+            title: "Survey Submitted!",
+            timer: 1500,
+            showConfirmButton: false
+        });
+
+        setTimeout(() => window.location.href = "thankyou.html", 1500);
+    });
+}
