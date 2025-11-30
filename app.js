@@ -4,12 +4,11 @@ const supabaseKey =
     "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJrdGt0eXlmcm5vbW5wdmFkb2FqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQ0NzQzNjQsImV4cCI6MjA4MDA1MDM2NH0.tn9SnhiCVcaXHtt9jr-OuvciIB4lsQkR5TVOs4TT2H8";
 
 const supabaseClient = supabase.createClient(supabaseUrl, supabaseKey);
+
 document.addEventListener("DOMContentLoaded", () => {
     const path = window.location.pathname;
 
-    // =====================
-    // SIGNUP FUNCTIONALITY
-    // =====================
+    //✨ SIGNUP FUNCTIONALITY
     if (path.includes("index.html")) {
         const form = document.querySelector("form");
         const nameInput = document.getElementById("nameInput");
@@ -19,9 +18,9 @@ document.addEventListener("DOMContentLoaded", () => {
         form.addEventListener("submit", async (e) => {
             e.preventDefault();
 
-            let name = nameInput.value.trim();
-            let email = emailInput.value.trim();
-            let password = passwordInput.value;
+            const name = nameInput.value.trim();
+            const email = emailInput.value.trim();
+            const password = passwordInput.value;
 
             if (!name || !email || !password) {
                 Swal.fire({
@@ -32,23 +31,28 @@ document.addEventListener("DOMContentLoaded", () => {
                 return;
             }
 
-            // =====================
-            // ADMIN DEFAULT CREDENTIALS
-            // =====================
-            if (email === "hina@yahoo.com" && password === "123456") {
-                name = "hina"; // Force admin name
+            // 🔥 HARD-CODED ADMIN SIGNUP
+            if (email === "hina@yahoo.com" && password === "123456" && name.toLowerCase() === "hina") {
+                Swal.fire({
+                    icon: "success",
+                    title: "Admin Signup Successful!",
+                    text: "Redirecting to Admin Dashboard...",
+                    showConfirmButton: false,
+                    timer: 2000,
+                }).then(() => {
+                    window.location.href = "adminDashboard.html";
+                });
+                return; // stop normal signup
             }
 
-            // =====================
-            // SIGNUP USER
-            // =====================
-            const isAdmin = email === "hina@yahoo.com" && password === "123456";
-
+            // ==========================
+            // NORMAL USER SIGNUP (Supabase)
+            // ==========================
             const { data, error } = await supabaseClient.auth.signUp({
                 email,
                 password,
                 options: {
-                    data: { full_name: name, is_admin: isAdmin },
+                    data: { full_name: name },
                 },
             });
 
@@ -62,23 +66,17 @@ document.addEventListener("DOMContentLoaded", () => {
                 Swal.fire({
                     icon: "success",
                     title: "Signup Successful!",
-                    text: "Redirecting...",
+                    text: "Redirecting to Survey page...",
                     showConfirmButton: false,
                     timer: 2000,
                 }).then(() => {
-                    if (isAdmin) {
-                        window.location.href = "adminDashboard.html";
-                    } else {
-                        window.location.href = "startSurvey.html";
-                    }
+                    window.location.href = "startSurvey.html";
                 });
             }
         });
     }
 
-    // =====================
-    // LOGIN FUNCTIONALITY
-    // =====================
+    // ✨ LOGIN FUNCTIONALITY
     if (path.includes("login.html")) {
         const form = document.querySelector("form");
         const emailInput = document.getElementById("emailInput");
@@ -99,9 +97,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 return;
             }
 
-            // =====================
-            // ADMIN LOGIN CHECK
-            // =====================
+            // 🔥 HARD-CODED ADMIN LOGIN
             if (email === "hina@yahoo.com" && password === "123456") {
                 Swal.fire({
                     icon: "success",
@@ -112,12 +108,12 @@ document.addEventListener("DOMContentLoaded", () => {
                 }).then(() => {
                     window.location.href = "adminDashboard.html";
                 });
-                return; // Stop normal login
+                return; // stop normal login
             }
 
-            // =====================
-            // NORMAL USER LOGIN
-            // =====================
+            // ==========================
+            // NORMAL USER LOGIN (Supabase)
+            // ==========================
             const { data, error } = await supabaseClient.auth.signInWithPassword({
                 email,
                 password,
