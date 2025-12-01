@@ -208,7 +208,7 @@ function addDropdownOption() {
     const div = document.createElement("div");
     div.className = "option-item d-flex mb-2";
     div.innerHTML = `
-        <input type="text" class="form-control" placeholder="Option text">
+        <input type="text" class="form-control dropdown-option" placeholder="Option text">
         <button class="btn btn-danger btn-sm ms-2" type="button" onclick="this.parentElement.remove()">
             <i class="fas fa-trash"></i>
         </button>
@@ -223,13 +223,14 @@ function addCheckboxOption() {
     const div = document.createElement("div");
     div.className = "option-item d-flex mb-2";
     div.innerHTML = `
-        <input type="text" class="form-control" placeholder="Option text">
+        <input type="text" class="form-control checkbox-option" placeholder="Option text">
         <button class="btn btn-danger btn-sm ms-2" type="button" onclick="this.parentElement.remove()">
             <i class="fas fa-trash"></i>
         </button>
     `;
     container.appendChild(div);
 }
+
 
 
 
@@ -392,6 +393,11 @@ function renderSurveyQuestions(survey) {
     questions.forEach((q, index) => {
         if (!q.text) return; // Skip empty questions
 
+        // 🔥 FIX: Convert string options into array
+        if (q.options && typeof q.options === "string") {
+            q.options = q.options.split(",").map(opt => opt.trim());
+        }
+
         let html = `
         <div class="question-card">
             <div class="d-flex align-items-center mb-3">
@@ -411,27 +417,34 @@ function renderSurveyQuestions(survey) {
         }
 
         if (q.type === "dropdown") {
-            html += `<select class="form-select user-answer" data-index="${index}" data-required="${q.required}">
-                        <option value="">Select an option</option>`;
-            q.options.forEach(opt => {
-                html += `<option value="${opt}">${opt}</option>`;
-            });
+            html += `
+            <select class="form-select user-answer" data-index="${index}" data-required="${q.required}">
+                <option value="">Select an option</option>
+            `;
+
+            if (Array.isArray(q.options)) {
+                q.options.forEach(opt => {
+                    html += `<option value="${opt}">${opt}</option>`;
+                });
+            }
+
             html += `</select>`;
         }
 
-        if (q.type === "checkbox" && Array.isArray(q.options) && q.options.length > 0) {
-            q.options.forEach(opt => {
-                html += `
-        <div class="form-check">
-            <input type="checkbox" class="form-check-input user-answer-checkbox" 
-                data-index="${index}" value="${opt}">
-            <label class="form-check-label">${opt}</label>
-        </div>`;
-            });
-        } else if (q.type === "checkbox") {
-            html += `<p class="text-muted small">No options available for this question.</p>`;
+        if (q.type === "checkbox") {
+            if (Array.isArray(q.options) && q.options.length > 0) {
+                q.options.forEach(opt => {
+                    html += `
+                    <div class="form-check">
+                        <input type="checkbox" class="form-check-input user-answer-checkbox" 
+                            data-index="${index}" value="${opt}">
+                        <label class="form-check-label">${opt}</label>
+                    </div>`;
+                });
+            } else {
+                html += `<p class="text-muted small">No options available for this question.</p>`;
+            }
         }
-
 
         html += `</div>`;
         container.innerHTML += html;
