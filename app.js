@@ -33,7 +33,7 @@ document.addEventListener("DOMContentLoaded", () => {
     // SURVEY PAGE
     if (path.includes("survey.html") || path.includes("startSurvey.html")) {
         console.log("Initializing Survey Page");
-        loadSurveyQuestions();
+        // loadSurveyQuestions();
     }
 
     // ADMIN DASHBOARD
@@ -189,14 +189,6 @@ function handleLoginPage() {
         }
     });
 }
-
-
-
-
-
-
-
-
 
 // =============================================
 // ADMIN: ADD OPTIONS FOR DROPDOWN/CHECKBOX
