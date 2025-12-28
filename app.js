@@ -222,19 +222,6 @@ function addCheckboxOption() {
     `;
     container.appendChild(div);
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
 /// =====================================================
 // ADMIN: CREATE SURVEY — NO VALIDATION — WITH REDIRECT
 // =====================================================
@@ -304,20 +291,6 @@ function handleAdminSurveyCreation() {
     });
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 // =========================================================
 // USER PAGE: LOAD SURVEY + RENDER QUESTIONS + VALIDATION
 // =========================================================
@@ -326,7 +299,6 @@ function handleAdminSurveyCreation() {
 if (window.location.pathname.includes("survey.html")) {
     loadSurveyForUser();
 }
-
 async function loadSurveyForUser() {
     const spinner = document.getElementById("loadingSpinner");
     const container = document.getElementById("questionsContainer");
@@ -334,38 +306,50 @@ async function loadSurveyForUser() {
 
     spinner.style.display = "block";
 
-    // Get survey ID from URL
     const urlParams = new URLSearchParams(window.location.search);
-    const surveyId = urlParams.get("id");
+    let surveyId = urlParams.get("id");
 
-    if (!surveyId) {
-        spinner.style.display = "none";
-        document.getElementById("noQuestionsMessage").style.display = "block";
-        return;
+    let surveyData = null;
+
+    // 🔹 CASE 1: Survey ID exists (admin redirect)
+    if (surveyId) {
+        const { data, error } = await supabaseClient
+            .from("surveys")
+            .select("*")
+            .eq("id", surveyId)
+            .single();
+
+        if (!error) surveyData = data;
     }
 
-    // Fetch survey from Supabase
-    const { data, error } = await supabaseClient
-        .from("surveys")
-        .select("*")
-        .eq("id", surveyId)
-        .single();
+    // 🔹 CASE 2: No ID → load latest survey for users
+    if (!surveyData) {
+        const { data, error } = await supabaseClient
+            .from("surveys")
+            .select("*")
+            .order("created_at", { ascending: false })
+            .limit(1)
+            .single();
+
+        if (error || !data) {
+            spinner.style.display = "none";
+            document.getElementById("noQuestionsMessage").style.display = "block";
+            return;
+        }
+
+        surveyData = data;
+        surveyId = data.id;
+    }
 
     spinner.style.display = "none";
 
-    if (error || !data) {
-        document.getElementById("noQuestionsMessage").style.display = "block";
-        return;
-    }
-
-    // Render questions
-    renderSurveyQuestions(data);
-
+    renderSurveyQuestions(surveyData);
     form.style.display = "block";
 
-    startTimer(); // Start 10-minute timer
-    handleUserFormSubmit(surveyId, data); // Validation + Submit
+    startTimer();
+    handleUserFormSubmit(surveyId, surveyData);
 }
+
 
 // ===============================
 // RENDER SURVEY QUESTIONS
@@ -470,7 +454,6 @@ function startTimer() {
         }
     }, 1000);
 }
-
 
 // ===============================
 // USER SURVEY SUBMIT + VALIDATION
