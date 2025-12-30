@@ -6,62 +6,17 @@
   <title>Survey Responses - Admin</title>
   <!--  BOOTSTRAP  -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Supabase JS -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <!-- CUSTOM CSS -->
+  <link rel="stylesheet" href="styles.css">
   <style>
     body {
       background: linear-gradient(135deg, #0f766e 0%, #14b8a6 100%);
       min-height: 100vh;
       font-family: 'Poppins', sans-serif;
     }
-
-    .page-title {
-      color: #ecfeff;
-      font-weight: 600;
-    }
-
-    .response-card {
-      background: rgba(255, 255, 255, 0.15);
-      backdrop-filter: blur(12px);
-      border-radius: 16px;
-      border: 1px solid rgba(255, 255, 255, 0.25);
-      box-shadow: 0 0 0 0.25rem rgba(20, 184, 166, 0.15);
-      overflow: hidden;
-    }
-
-    .response-header {
-      background: linear-gradient(135deg, #0f766e 0%, #14b8a6 100%);
-      color: #ecfeff;
-      font-weight: 500;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-    }
-
-    .question {
-      color: #0f766e;
-      font-weight: 600;
-      margin-bottom: 4px;
-    }
-
-    .answer {
-      background: rgba(255, 255, 255, 0.75);
-      padding: 10px 14px;
-      border-radius: 10px;
-      margin-bottom: 14px;
-      color: #0f172a;
-      border-left: 4px solid #14b8a6;
-    }
-
-    .answer.empty {
-      opacity: 0.6;
-      font-style: italic;
-    }
-
-    .timestamp {
-      font-size: 0.85rem;
-      opacity: 0.85;
-    }
   </style>
-  <!-- Supabase JS -->
-
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 
 <body class="bg-light">
